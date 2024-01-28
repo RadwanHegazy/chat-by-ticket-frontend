@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سجل بياناتك </title>
+    <link rel="stylesheet" href="{% static 'style/base.css' %}">
+    <link rel="stylesheet" href="{% static 'style/cilent_register.css' %}">
+</head>
+<body>
+
+    {% for message in messages %}
+        <script>
+            alert("{{message}}")
+        </script>
+    {% endfor %}
+    
+    <a href="{% url 'login' %}" class="login">تسجيل الدخول للموظفين</a>
+    <form method="POST" class="container" enctype="multipart/form-data" autocomplete="off">
+        {% csrf_token %}
+        <h1>أدخل البيانات التالية لاتمام العملية</h1>
+
+        <div class="image">
+            <input type="file" id="imgFile" hidden name="picture">
+            <img id="imgView" src="{% static 'images/default.png' %}" alt=""> 
+            <button type="button" id="imgBtn" >تغير</button>
+        </div>
+
+        <input type="text" name="full_name" placeholder="اسمك بالكامل">
+        <input type="email" name="email" placeholder="البريد الالكتروني">
+        <textarea name="problem" id="" placeholder="وصف المشكلة" cols="30" rows="10"></textarea>
+
+        <button id="sent-btn" type="submit">ارسال المشكلة</button>
+
+    </form>
+
+
+    <script>
+
+        if ("{{error}}"){
+            alert("{{error}}")
+        }
+
+        // change pic image
+        var imgView = document.getElementById('imgView');
+        var imgBtn  = document.getElementById("imgBtn");
+        var imgFile = document.getElementById('imgFile') ;
+
+        imgBtn.addEventListener('click',()=>{
+            imgFile.click()
+        })
+
+        imgFile.addEventListener('change',(e)=>{
+            imgView.src = URL.createObjectURL(e.target.files[0]);
+        })
+    </script>
+    
+</html>

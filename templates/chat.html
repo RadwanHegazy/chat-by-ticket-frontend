@@ -1,0 +1,136 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>التذكرة</title>
+    <link rel="stylesheet" href="{% static 'style/base.css' %}">
+    <link rel="stylesheet" href="{% static 'style/employee_home.css' %}">
+</head>
+<body>
+    
+    <div class="container">
+        
+        {% if c_user %}
+            <div class="up">
+                <div class="left">
+                    <img src="{{main_url}}{{ticket.client.picture}}" alt="">
+                    <p>{{ticket.client.full_name}}</p>
+                </div>
+                <a href="{% url 'home' %}" id="logout">اغلاق التذكرة</a>
+            </div>
+        {% endif %}
+        
+        <div class="problem">
+            <p>{{ticket.client.problem}}</p>
+        </div>
+
+        <div class="chat">
+
+            <div class="view">
+                <!-- messages append here -->
+            </div>
+
+
+            <div class="in">
+                <input type="text" id="msgContent" required placeholder="ادخل رسالتك هنا">
+                <button class="send" id="sendMsg">ارسال</button>
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        // connect to websocket
+
+        var cook = document.cookie;
+        let user_token = '';
+        
+        if (cook.includes('user')){
+            user_token = cook.split('user=')[1];
+        }
+
+        
+        var socket = new WebSocket(`ws://127.0.0.1:4444/chat/{{ticket.id}}/?token=${user_token}`);
+        var msg_container = document.querySelector('.view');
+
+        var current_client = "{{c_user.full_name}}" ;
+
+        if (current_client == ''){
+            current_client = 'client'
+        }
+
+        function BuildMessage (msg){
+            var msgElement = document.createElement('div');
+            msgElement.setAttribute('class','msg');
+            msgElement.setAttribute('id',msg.id);
+            msgElement.innerHTML = `<p>${msg.body}</p>`;
+
+            if (msg.sender == current_client){
+                msgElement.classList.toggle('sender')
+            }
+            else{
+                msgElement.classList.toggle('reciver')
+            }
+
+            msg_container.appendChild(msgElement)
+            window.location.href = "#" + msg.id;
+        }
+
+        console.log(current_client)
+        socket.onmessage = function(e){
+            var data = JSON.parse(e.data);
+            var messages = data.messages;
+
+            if (messages){
+                messages.forEach(msg=>{
+
+                   BuildMessage(msg);
+                   
+                })
+            }
+            else{
+                var msg = data;
+                BuildMessage(msg);
+            }
+
+
+        }
+
+        
+
+        // send msg
+        var message = document.getElementById('msgContent');
+        var send_btn = document.getElementById('sendMsg');
+
+        function sendMsg(){
+            if (message.value == ''){
+                alert('ادخل رسالتك')
+            }else{
+                socket.send(JSON.stringify({message:message.value}))
+                message.value = '';
+            }
+        }
+
+        message.addEventListener('keypress',(event)=>{
+            
+            if (event.key == 'Enter'){
+                sendMsg();
+            }
+
+        })
+
+
+        send_btn.addEventListener('click',function(){
+           sendMsg();
+        })
+
+    </script>
+
+</body>
+</html>

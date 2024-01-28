@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول للموظفين </title>
+    <link rel="stylesheet" href="{% static 'style/base.css' %}">
+    <link rel="stylesheet" href="{% static 'style/cilent_register.css' %}">
+</head>
+<body>
+    
+    <a href="{% url 'register_client' %}" class="login">الرجوع</a>
+    <form class="container" method="POST" autocomplete="off">
+        {% csrf_token %}
+        <h1>أدخل البيانات التالية لاتمام العملية</h1>
+
+
+        <input type="email" autocomplete="off" name="email" placeholder="البريد الالكتروني">
+        <input type="password" autocomplete="off" name="password" placeholder="البريد الالكتروني">
+
+       <button id="sent-btn" type="submit">تسجيل</button>
+
+    </form>
+
+    <script>
+        if ("{{error}}"){
+            alert("{{error}}")
+        }
+    </script>
+    
+</html>

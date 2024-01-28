@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرئيسية</title>
+    <link rel="stylesheet" href="{% static 'style/base.css' %}">
+    <link rel="stylesheet" href="{% static 'style/employee_home.css' %}">
+</head>
+<body>
+    
+    <div class="container">
+        
+        <div class="up">
+            <div class="left">
+                <img src="{{main_url}}{{c_user.picture}}" alt="">
+                <p>{{c_user.full_name}}</p>
+            </div>
+            <a href="{% url 'logout' %}" id="logout">تسجيل الخروج</a>
+        </div>
+
+
+        <p class="tic-count">جميع التذاكر لديك : {{ticket_count}}</p>
+
+        <div class="tickets">
+            
+            {% for ticket in tickets %}
+                <a href="{% url 'ticket' ticket.id %}" class="ticket">
+                    <img src="{{main_url}}{{ticket.client.picture}}" alt="">
+                    <p>{{ticket.client.full_name}}</p>
+                </a>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>

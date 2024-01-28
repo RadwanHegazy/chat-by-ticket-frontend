@@ -1,0 +1,26 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+:root{
+    --var-color-blue:#42B9F6;
+    --var-font:"Cairo",sans-serif;
+}
+body {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--var-color-blue);
+    font-family: var(--var-font);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+}
